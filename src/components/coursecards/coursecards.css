@@ -1,0 +1,21 @@
+.container{
+	margin-top: 50px;
+	margin-bottom: 50px;
+}
+.courseHeading{
+	font-size: 1.1rem;
+	text-transform: capitalize;
+}
+.originalAmount{
+	font-size: 1em;
+	font-weight: bolder;
+	font-variant-numeric: slashed-zero;
+	text-decoration: line-through;
+	margin-right: 5px;
+}
+.discountedAmount{
+	font-size: 1em;
+	font-weight: bolder;
+	font-variant-numeric: slashed-zero;
+}
+  
