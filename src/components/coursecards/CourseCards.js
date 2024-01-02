@@ -36,7 +36,6 @@ export default function CourseCards() {
                                 <div style={{display:"flex"}}>
                                     <div className="originalAmount"> ₹20,000</div>
                                     <div className="discountedAmount"> ₹9,999</div>
-                                   
                                 </div>
                             </CardContent>
                         </Card>
