@@ -1,21 +1,36 @@
 import * as React from "react";
 import Button from '@mui/material/Button';
-import { styled, alpha } from '@mui/material/styles';
+import { styled, alpha, useTheme } from '@mui/material/styles';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import InputBase from '@mui/material/InputBase';
-import Badge from '@mui/material/Badge';
+import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import InboxIcon from '@mui/icons-material/MoveToInbox';
+import MailIcon from '@mui/icons-material/Mail';
 import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
 import MenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
 import AccountCircle from '@mui/icons-material/AccountCircle';
-import MailIcon from '@mui/icons-material/Mail';
-import NotificationsIcon from '@mui/icons-material/Notifications';
 import MoreIcon from '@mui/icons-material/MoreVert';
+import { Divider, Drawer, List, ListItem, ListItemButton, ListItemIcon, ListItemText } from "@mui/material";
+import { useState } from "react";
+import { Link } from "react-router-dom";
+
+const drawerWidth = 240;
+
+const DrawerHeader = styled('div')(({ theme }) => ({
+  display: 'flex',
+  alignItems: 'center',
+  padding: theme.spacing(0, 1),
+  // necessary for content to be below app bar
+  ...theme.mixins.toolbar,
+  justifyContent: 'flex-end',
+}));
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -27,6 +42,7 @@ const Search = styled('div')(({ theme }) => ({
   marginRight: theme.spacing(2),
   marginLeft: 0,
   width: '100%',
+  left: "auto",
   [theme.breakpoints.up('sm')]: {
     marginLeft: theme.spacing(3),
     width: 'auto',
@@ -65,6 +81,17 @@ export default function Nav() {
 
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
+  const theme = useTheme();
+  const [open, setOpen] = useState(false);
+  const menu = []
+
+  const handleDrawerOpen = () => {
+    setOpen(true);
+  };
+
+  const handleDrawerClose = () => {
+    setOpen(false);
+  };
 
   const handleProfileMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
@@ -145,7 +172,7 @@ export default function Nav() {
             aria-haspopup="true"
             color="inherit"
           >
-            <Button color="inherit">Login</Button>
+            {!userIsLoggedIn && <Link style={{color: "inherit"}} to="/login"><Button color="inherit">LOGIN</Button></Link>}
           </IconButton>
 
         </MenuItem>
@@ -162,10 +189,12 @@ export default function Nav() {
             edge="start"
             color="inherit"
             aria-label="open drawer"
+            onClick={handleDrawerOpen}
             sx={{ mr: 2 }}
           >
             <MenuIcon />
           </IconButton>
+          <Link style={{color: 'inherit', textDecoration: 'none'}} to="/">
           <Typography
             variant="h6"
             noWrap
@@ -174,6 +203,7 @@ export default function Nav() {
           >
             Power Of Patterns
           </Typography>
+          </Link>
           <Search>
             <SearchIconWrapper>
               <SearchIcon />
@@ -198,7 +228,7 @@ export default function Nav() {
                 <AccountCircle />
               </IconButton>
             }
-            {!userIsLoggedIn && <Button color="inherit">Login</Button>}
+            {!userIsLoggedIn && <Link style={{color: "inherit"}} to="/login"><Button color="inherit">LOGIN</Button></Link>}
 
           </Box>
           <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
@@ -215,6 +245,61 @@ export default function Nav() {
           </Box>
         </Toolbar>
       </AppBar>
+      <Drawer
+        sx={{
+          width: drawerWidth,
+          flexShrink: 0,
+          '& .MuiDrawer-paper': {
+            width: drawerWidth,
+            boxSizing: 'border-box',
+          },
+        }}
+        variant="persistent"
+        anchor="left"
+        open={open}
+      >
+        <DrawerHeader>
+          <IconButton onClick={handleDrawerClose}>
+            {theme.direction === 'ltr' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
+          </IconButton>
+        </DrawerHeader>
+        <Divider />
+        <List>
+           <ListItem  disablePadding>
+           <Link to="about" style={{textDecoration: 'none', width: "100%"}}>
+              <ListItemButton onClick={handleDrawerClose}>
+                <ListItemIcon>
+                  <InboxIcon />
+                </ListItemIcon>
+                <ListItemText primary="about"></ListItemText>
+              </ListItemButton>
+              </Link>
+            </ListItem>
+          {/* {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
+            <ListItem key={text} disablePadding>
+              <ListItemButton>
+                <ListItemIcon>
+                  {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+                </ListItemIcon>
+                <ListItemText primary={text} />
+              </ListItemButton>
+            </ListItem>
+          ))} */}
+        </List>
+        <Divider />
+        <List>
+          {['All mail', 'Trash', 'Spam'].map((text, index) => (
+            <ListItem key={text} disablePadding>
+              <ListItemButton>
+                <ListItemIcon>
+                  {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+                </ListItemIcon>
+                <ListItemText primary={text} />
+              </ListItemButton>
+            </ListItem>
+          ))}
+        </List>
+      </Drawer>
       {renderMobileMenu}
       {renderMenu}
     </Box>
